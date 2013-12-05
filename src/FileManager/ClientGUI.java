@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 import javax.swing.JOptionPane;
 import java.io.File;
+import java.util.ArrayList;
 
 public class ClientGUI extends javax.swing.JFrame {
 
@@ -244,8 +245,8 @@ public class ClientGUI extends javax.swing.JFrame {
             JFileChooser fileChooser = new JFileChooser("test files");
             if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
                 File file = fileChooser.getSelectedFile();
-                String response2 = client.clientUpload(file);
-                textareaMainDialog.append("\n~ " + response2);
+                String uploadResponse = client.clientUpload(file);
+                textareaMainDialog.append("\n~ " + uploadResponse);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -255,25 +256,12 @@ public class ClientGUI extends javax.swing.JFrame {
     private void btnGetFileListActionPerformed(java.awt.event.ActionEvent evt) {
 
         try {
-            //response = client.clientGetList();
-            int messageCode = Integer.parseInt(response.substring(0, 3));
+            ArrayList<String> filenamelist = client.clientGetList();
+            //int messageCode = Integer.parseInt(response.substring(0, 3));
+            textareaMainDialog.append("\n~ File List:\n");
 
-            switch (messageCode) {
-                case 230:
-                    String output = "";
-                    response = response.substring(4, response.length());
-                    for (int i = 0; i < response.length(); i++) {
-                        if (response.charAt(i) != '#') {
-                            output += response.charAt(i);
-                        } else {
-                            output += "\n";
-                        }
-                    }
-                    textareaMainDialog.append("\n~ File List:\n" + output);
-                    break;
-                default:
-                    textareaMainDialog.append("\n~ " + response.substring(4, response.length()));
-                    break;
+            for (String filename : filenamelist) {
+                textareaMainDialog.append(filename + "\n");
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -318,23 +306,23 @@ public class ClientGUI extends javax.swing.JFrame {
         }
     }
 
-    private void btnLogOutActionPerformed(java.awt.event.ActionEvent evt){
+    private void btnLogOutActionPerformed(java.awt.event.ActionEvent evt) {
 
         logoutSub();
     }
 
     private void forcedLogOut() {
-        
+
         JOptionPane.showMessageDialog(null, "The system is going to force a disconnection!");
-        
-        logoutSub(); 
+
+        logoutSub();
     }
-    
-    private void logoutSub(){
-    
-    try {
+
+    private void logoutSub() {
+
+        try {
             response = client.logOut();
-          
+
             if (response.substring(0, 11).equals("Logged Out!")) {
                 isLoggedIn = false;
                 isConnected = false;

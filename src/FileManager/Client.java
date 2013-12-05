@@ -2,6 +2,7 @@ package FileManager;
 
 import java.io.*;
 import java.rmi.*;
+import java.util.ArrayList;
 //import javax.swing.JOptionPane;
 
 /**
@@ -64,7 +65,7 @@ public class Client {
     }
 
     public String clientUpload(File file) {
-        String response3 = "";
+        String newResponse = "";
         
         try {
             byte buffer[] = new byte[(int) file.length()];
@@ -72,23 +73,26 @@ public class Client {
             inputStream.read(buffer, 0, buffer.length);
             inputStream.close();
 
-            response3 = interfaceObject.uploadFile(buffer, file.getName());
+            newResponse = interfaceObject.uploadFile(buffer, file.getName());
         } catch (Exception ex) {
             ex.printStackTrace();
         }
 
-        return response3;
+        return newResponse;
     }
-//
-//    public String clientGetList() {
-//        try {
-//            response = helper.getFileList();
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//
-//        return response;
-//    }
+
+    public ArrayList<String> clientGetList() {
+        
+        ArrayList<String> filenameList = null;
+        try {
+            filenameList  = interfaceObject.fileList();
+            
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return filenameList;
+    }
 //
 //    public String clientDeleteFile(String fileName) {
 //        try {
