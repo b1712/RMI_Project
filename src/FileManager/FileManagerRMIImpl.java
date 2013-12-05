@@ -1,5 +1,6 @@
 package FileManager;
 
+import java.awt.List;
 import java.rmi.*;
 import java.rmi.server.UnicastRemoteObject;
 import java.io.*;
@@ -10,6 +11,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 
 /**
  *
@@ -49,9 +51,10 @@ public class FileManagerRMIImpl extends UnicastRemoteObject implements RMIFileMa
         } catch (Exception ex) {
             response = "There were problems registering!";
             System.out.println("Exception caught in thread: " + ex);
+        } finally {
+            return response;
         }
 
-        return response;
     }
 
     @Override
@@ -78,36 +81,72 @@ public class FileManagerRMIImpl extends UnicastRemoteObject implements RMIFileMa
         } catch (Exception ex) {
             response = "There were problems logging in!";
             System.out.println("Exception caught in thread: " + ex);
+        } finally {
+            return response;
         }
 
-        return response;
     }
 
     @Override
     public String uploadFile(byte[] buffer, String filename) throws java.rmi.RemoteException {
 
         try {
-            FileOutputStream newFile = new FileOutputStream("C:\\dataStore\\" + client + "\\" + filename);
-            newFile.write(buffer);
-            newFile.close();
-        } //************************************************************************************
-        catch (FileNotFoundException ex) {
-            System.out.println("FileNotFoundException : " + ex);
-        } catch (IOException ioe) {
-            System.out.println("IOException : " + ioe);
+            //**********************************************************
+            if (isLogin) {
+                FileOutputStream newFile = new FileOutputStream("C:\\dataStore\\" + client + "\\" + filename);
+                newFile.write(buffer);
+                newFile.close();
+                response = "Upload Successful";
+            } else {
+                response = "Your Not Logged In";
+            }
+
+        } catch (IOException ioex) {
+            response = "There were IO problems logging in!";
+            System.out.println("IOException : " + ioex);
+        } catch (Exception ex) {
+            response = "Exception - There were problems logging in!";
+            System.out.println("Exception caught in thread: " + ex);
+        } finally {
+            return response;
         }
-        return "File Saved!";
+
     }
 
     @Override
-    public Byte[] downloadFile(String s) throws java.rmi.RemoteException {
-        Byte[] b = new Byte[10];
+    public ArrayList<String> fileList() throws java.rmi.RemoteException {
+
+        ArrayList<String> filenameList = new ArrayList<String>();
+        try {
+            //fileListAsString = "";
+            if (isLogin) {
+                File folder = new File("C:\\dataStore\\" + client);
+                File[] listOfFiles = folder.listFiles();
+                for (File file : listOfFiles) {
+                    filenameList.add(file.getName());
+                }
+                if (filenameList.size() == 0) {
+                    filenameList.add("No Files Found!");
+                }
+            } else {
+                filenameList.add("Your Not Logged In");
+            }
+        } catch (Exception ex) {
+            filenameList.clear();
+            filenameList.add("Exception - Unsuccessful Obtaining List!");
+            System.out.println("Exception caught in thread: " + ex);
+        } finally {
+            return filenameList;
+        }
+
+
+
+    }
+
+    @Override
+    public byte[] downloadFile(String s) throws java.rmi.RemoteException {
+        byte[] b = new byte[10];
         return b;
-    }
-
-    @Override
-    public String fileList() throws java.rmi.RemoteException {
-        return "";
     }
 
     public String deleteFile(String s) throws java.rmi.RemoteException {
