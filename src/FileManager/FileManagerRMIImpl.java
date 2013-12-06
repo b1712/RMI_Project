@@ -41,7 +41,7 @@ public class FileManagerRMIImpl extends UnicastRemoteObject implements RMIFileMa
                 dir.mkdir();
                 response = "Welcome " + username;
                 isLogin = true;
-                client = username;
+                this.client = username;
                 gui.ServerTextArea.append("\n" + username + " has registered and is logged on.");
                 gui.count = gui.count + 1;
                 gui.countTextField.setText(Integer.toString(gui.count));
@@ -70,7 +70,7 @@ public class FileManagerRMIImpl extends UnicastRemoteObject implements RMIFileMa
             if (clientFolder.isDirectory()) {
                 isLogin = true;
                 response = "Welcome back " + username;
-                client = username;
+                this.client = username;
                 gui.ServerTextArea.append("\n" + username + " is logged on.");
                 gui.count = gui.count + 1;
                 gui.countTextField.setText(Integer.toString(gui.count));
@@ -114,13 +114,13 @@ public class FileManagerRMIImpl extends UnicastRemoteObject implements RMIFileMa
     }
 
     @Override
-    public ArrayList<String> fileList() throws java.rmi.RemoteException {
+    public ArrayList<String> fileList(String username) throws java.rmi.RemoteException {
 
         ArrayList<String> filenameList = new ArrayList<String>();
         try {
             //fileListAsString = "";
             if (isLogin) {
-                File folder = new File("C:\\dataStore\\" + client);
+                File folder = new File("C:\\dataStore\\" + username);
                 File[] listOfFiles = folder.listFiles();
                 for (File file : listOfFiles) {
                     filenameList.add(file.getName());
@@ -153,9 +153,9 @@ public class FileManagerRMIImpl extends UnicastRemoteObject implements RMIFileMa
         return "";
     }
 
-    public String logout() throws java.rmi.RemoteException {
+    public String logout(String username) throws java.rmi.RemoteException {
         isLogin = false;
-        gui.ServerTextArea.append("\n" + client + " has logged off.");
+        gui.ServerTextArea.append("\n" + username + " has logged off.");
         gui.count = gui.count - 1;
         gui.countTextField.setText(Integer.toString(gui.count));
         return "Logged Out!";

@@ -15,12 +15,16 @@ import java.io.*;
  *
  * @author t00154737
  */
-public class FileManagerServer {
+public class FileManagerServer { //extends Thread {
 
     ServerGUI gui;
-    
     public void startServer(ServerGUI gui) {
-        
+//    @Override
+//    public void run() {
+//        this.startServer();
+//    }
+
+    //public void startServer() {
         this.gui = gui;
         InputStreamReader is = new InputStreamReader(System.in);
         BufferedReader br = new BufferedReader(is);

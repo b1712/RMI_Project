@@ -81,11 +81,11 @@ public class Client {
         return newResponse;
     }
 
-    public ArrayList<String> clientGetList() {
+    public ArrayList<String> clientGetList(String username) {
         
         ArrayList<String> filenameList = null;
         try {
-            filenameList  = interfaceObject.fileList();
+            filenameList  = interfaceObject.fileList(username);
             
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -115,9 +115,9 @@ public class Client {
 //    }
 //
 
-    public String logOut() {
+    public String logOut(String username) {
         try {
-            response = interfaceObject.logout();
+            response = interfaceObject.logout(username);
 
         } catch (Exception ex) {
             ex.printStackTrace();

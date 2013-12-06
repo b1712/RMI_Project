@@ -12,8 +12,8 @@ public interface RMIFileManagerInterface extends java.rmi.Remote
     public String login(String s) throws java.rmi.RemoteException;
     public String uploadFile(byte [] b, String s) throws java.rmi.RemoteException;
     public byte [] downloadFile(String s) throws java.rmi.RemoteException;
-    public ArrayList<String> fileList() throws java.rmi.RemoteException;
+    public ArrayList<String> fileList(String s) throws java.rmi.RemoteException;
     public String deleteFile(String s) throws java.rmi.RemoteException;
-    public String logout() throws java.rmi.RemoteException;
+    public String logout(String s) throws java.rmi.RemoteException;
 }
 

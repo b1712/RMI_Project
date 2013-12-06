@@ -256,7 +256,7 @@ public class ClientGUI extends javax.swing.JFrame {
     private void btnGetFileListActionPerformed(java.awt.event.ActionEvent evt) {
 
         try {
-            ArrayList<String> filenamelist = client.clientGetList();
+            ArrayList<String> filenamelist = client.clientGetList(username);
             //int messageCode = Integer.parseInt(response.substring(0, 3));
             textareaMainDialog.append("\n~ File List:\n");
 
@@ -321,7 +321,7 @@ public class ClientGUI extends javax.swing.JFrame {
     private void logoutSub() {
 
         try {
-            response = client.logOut();
+            response = client.logOut(username);
 
             if (response.substring(0, 11).equals("Logged Out!")) {
                 isLoggedIn = false;
