@@ -207,7 +207,8 @@ public class ClientGUI extends javax.swing.JFrame {
                     textfieldRegister.setText("");
                 }
             } catch (Exception ex) {
-                ex.printStackTrace();
+                //ex.printStackTrace();
+                System.out.println("Exception in Client: " + ex);
             }
         }
     }
@@ -256,7 +257,7 @@ public class ClientGUI extends javax.swing.JFrame {
     private void btnGetFileListActionPerformed(java.awt.event.ActionEvent evt) {
 
         try {
-            ArrayList<String> filenamelist = client.clientGetList(username);
+            ArrayList<String> filenamelist = client.clientGetList();
             //int messageCode = Integer.parseInt(response.substring(0, 3));
             textareaMainDialog.append("\n~ File List:\n");
 
@@ -283,11 +284,16 @@ public class ClientGUI extends javax.swing.JFrame {
                 int userSelection = fileChooser.showSaveDialog(this);
 
                 if (userSelection == JFileChooser.APPROVE_OPTION) {
-                    //response = client.clientDownload(fileName, fileChooser.getSelectedFile().toString());
+                    response = client.clientDownload(fileName, fileChooser.getSelectedFile().toString());
                 }
-                textareaMainDialog.append("\n~ " + response.substring(4, response.length()));
+                
             } catch (Exception ex) {
                 ex.printStackTrace();
+                response = "Exception - Download Unsuccessful!";
+            }
+            finally
+            {
+                textareaMainDialog.append("\n~ " + response);
             }
         }
     }
@@ -321,7 +327,7 @@ public class ClientGUI extends javax.swing.JFrame {
     private void logoutSub() {
 
         try {
-            response = client.logOut(username);
+            response = client.logOut();
 
             if (response.substring(0, 11).equals("Logged Out!")) {
                 isLoggedIn = false;

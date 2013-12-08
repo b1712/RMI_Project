@@ -144,9 +144,24 @@ public class FileManagerRMIImpl extends UnicastRemoteObject implements RMIFileMa
     }
 
     @Override
-    public byte[] downloadFile(String s) throws java.rmi.RemoteException {
-        byte[] b = new byte[10];
-        return b;
+    public byte[] downloadFile(String filename) throws java.rmi.RemoteException {
+        byte byteResponse[] = null;
+        try {
+            File file = new File("C:\\dataStore\\" + filename);
+            byte buffer[] = new byte[(int)file.length()];
+            FileInputStream fileInStream = new FileInputStream(file);
+            BufferedInputStream bufferInStream = new BufferedInputStream(fileInStream);
+            bufferInStream.read(buffer, 0, buffer.length);
+            bufferInStream.close();
+            byteResponse = buffer;
+
+        } catch (Exception ex) {
+
+            System.out.println("Exception caught in thread: " + ex);
+        } finally {
+            return byteResponse;
+        }
+
     }
 
     public String deleteFile(String s) throws java.rmi.RemoteException {

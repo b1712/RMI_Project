@@ -3,6 +3,7 @@ package FileManager;
 import java.io.*;
 import java.rmi.*;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 //import javax.swing.JOptionPane;
 
 /**
@@ -17,7 +18,7 @@ public class Client {
     String portNum = "7";
     RMIFileManagerInterface interfaceObject;
     boolean done = false;
-    String message, response;
+    String message, response, username;
 
     public Client() {
         try {
@@ -41,14 +42,17 @@ public class Client {
         } // end try 
         catch (Exception e) {
             System.out.println("Exception in Client: " + e);
+            //JOptionPane.showMessageDialog(null, "Server must be started...");
         }
     }
 
     public String clientRegister(String username) {
         try {
             response = interfaceObject.register(username);
+            this.username = username;
         } catch (Exception ex) {
             ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Server must be started...");
         }
 
         return response;
@@ -57,6 +61,7 @@ public class Client {
     public String clientLogin(String username) {
         try {
             response = interfaceObject.login(username);
+            this.username = username;
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -66,7 +71,7 @@ public class Client {
 
     public String clientUpload(File file) {
         String newResponse = "";
-        
+
         try {
             byte buffer[] = new byte[(int) file.length()];
             BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(file));
@@ -81,41 +86,37 @@ public class Client {
         return newResponse;
     }
 
-    public ArrayList<String> clientGetList(String username) {
-        
+    public ArrayList<String> clientGetList() {
+
         ArrayList<String> filenameList = null;
         try {
-            filenameList  = interfaceObject.fileList(username);
-            
+            filenameList = interfaceObject.fileList(username);
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
 
         return filenameList;
     }
-//
-//    public String clientDeleteFile(String fileName) {
-//        try {
-//            response = helper.deleteFile(fileName);
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//
-//        return response;
-//    }
-//
-//    public String clientDownload(String fileName, String path) {
-//        try {
-//            response = helper.downloadFile(fileName, path);
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//
-//        return response;
-//    }
-//
 
-    public String logOut(String username) {
+    public String clientDownload(String fileName, String path) {
+        byte buffer[] = null;
+        try {
+            FileOutputStream newFile = new FileOutputStream(path);
+
+            buffer = interfaceObject.downloadFile(username + "\\" + fileName);
+            newFile.write(buffer);
+            newFile.close();
+            response = "Download Successful";
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            response = "Exception - Download Unsuccessful!";
+        } finally {
+            return response;
+        }
+    }
+    
+    public String logOut() {
         try {
             response = interfaceObject.logout(username);
 

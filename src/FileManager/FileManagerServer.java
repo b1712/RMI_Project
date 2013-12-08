@@ -18,11 +18,15 @@ import java.io.*;
 public class FileManagerServer { //extends Thread {
 
     ServerGUI gui;
+    
+    
+    public void run() {
+        this.startServer(gui);
+    }
+    
+    
     public void startServer(ServerGUI gui) {
-//    @Override
-//    public void run() {
-//        this.startServer();
-//    }
+    
 
     //public void startServer() {
         this.gui = gui;
